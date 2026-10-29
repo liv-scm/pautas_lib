@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estúdio de Pautas · Hipertrofia com Evidência</title>
+<style>
+:root{
+  --paper:#F3EEE3; --paper2:#EAE3D2; --card:#FBF8F1; --ink:#1C2A22; --ink2:#4B5A50; --line:#CFC5AE;
+  --signal:#E8452C; --signal-soft:#F7D6CC; --marker:#DDEB5C; --moss:#2F5D46;
+  --display:"Bodoni 72","Didot","Bodoni MT","Big Caslon",serif;
+  --body:"Avenir Next","Gill Sans","Optima",sans-serif;
+  --mono:"SF Mono","Menlo","Courier New",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
+body{background-image:radial-gradient(rgba(28,42,34,.06) 1px,transparent 1px);background-size:18px 18px;padding-bottom:64px}
+button{font-family:inherit;cursor:pointer}
+.wrap{max-width:1360px;margin:0 auto;padding:28px 28px 0}
+
+/* masthead */
+.mast{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end;border-bottom:3px double var(--ink);padding-bottom:16px}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--signal)}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,4.6vw,60px);line-height:.95;margin:6px 0 8px;letter-spacing:-.01em}
+h1 em{font-style:italic;color:var(--moss)}
+.mast p{margin:0;max-width:680px;color:var(--ink2)}
+.flow{display:flex;gap:6px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.flow span{border:1px solid var(--ink);padding:6px 9px;background:var(--card)}
+.flow b{color:var(--signal);font-weight:600}
+
+/* layout */
+.grid{display:grid;grid-template-columns:minmax(0,330px) minmax(0,1fr);gap:22px;margin-top:22px}
+.panel{background:var(--card);border:1px solid var(--ink);box-shadow:5px 5px 0 var(--ink);min-width:0}
+.ph{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--ink);gap:10px}
+.ph h2{font-family:var(--display);font-weight:400;font-size:24px;margin:0}
+.ph .n{font-family:var(--mono);font-size:11px;color:var(--ink2)}
+
+/* bank */
+.filters{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px;border-bottom:1px dashed var(--line)}
+.chip{border:1px solid var(--ink);background:transparent;padding:4px 10px;font-size:12px;border-radius:99px;color:var(--ink)}
+.chip.on{background:var(--ink);color:var(--paper)}
+.bank{max-height:720px;overflow:auto}
+.item{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--paper2);background:transparent;padding:12px 16px;color:var(--ink);transition:background .15s}
+.item:hover{background:var(--paper)}
+.item.on{background:var(--marker)}
+.item .t{font-weight:600;font-size:14px;display:block}
+.item .b{font-size:12.5px;color:var(--ink2);display:block;margin-top:2px}
+.tag{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:1px 6px;border:1px solid currentColor;margin-right:6px}
+.tag.mito{color:var(--signal)} .tag.erro{color:#9A5B00} .tag.conceito{color:var(--moss)}
+
+/* studio */
+.studio{display:grid;grid-template-columns:minmax(0,1fr);}
+.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-bottom:1px solid var(--ink)}
+.ctl{padding:12px 16px;border-right:1px dashed var(--line);min-width:0}
+.ctl:last-child{border-right:0}
+.ctl label{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);margin-bottom:7px}
+.seg{display:flex;flex-wrap:wrap;gap:5px}
+.seg button{border:1px solid var(--ink);background:var(--paper);padding:5px 9px;font-size:12.5px;color:var(--ink)}
+.seg button.on{background:var(--signal);border-color:var(--signal);color:#fff}
+.formats{grid-column:1/-1;border-top:1px dashed var(--line);border-right:0}
+
+.out{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,280px);min-height:420px}
+.sheet{padding:22px 26px;border-right:1px solid var(--ink);min-width:0}
+.sheet h3{font-family:var(--display);font-weight:400;font-size:30px;line-height:1.05;margin:0 0 4px}
+.sheet .sub{font-family:var(--mono);font-size:11px;color:var(--ink2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:18px}
+.block{margin:0 0 14px;padding:12px 14px;background:var(--paper);border-left:4px solid var(--ink);position:relative}
+.block .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--signal);margin-bottom:4px;display:flex;justify-content:space-between}
+.block .txt{white-space:pre-wrap;font-size:14.5px}
+.block.hook{border-left-color:var(--signal);background:var(--signal-soft)}
+.block.hook .txt{font-family:var(--display);font-size:22px;line-height:1.15}
+.slides{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-bottom:14px}
+.slide{aspect-ratio:4/5;background:var(--ink);color:var(--paper);padding:14px;display:flex;flex-direction:column;justify-content:space-between;font-size:13px;line-height:1.35}
+.slide:nth-child(odd){background:var(--moss)}
+.slide:first-child{background:var(--signal)}
+.slide .num{font-family:var(--mono);font-size:10px;opacity:.7}
+.slide .big{font-family:var(--display);font-size:18px;line-height:1.1}
+.mini{border:0;background:none;font-family:var(--mono);font-size:10.5px;color:var(--ink);text-decoration:underline;padding:0}
+
+.side{padding:18px;display:flex;flex-direction:column;gap:16px;background:var(--paper);min-width:0}
+.side h4{margin:0 0 6px;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2)}
+.src{font-size:13px;margin:0;padding-left:16px}
+.src li{margin-bottom:9px}
+.src .lvl,.src-card .lvl{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--moss)}
+.src .full{font-size:11.5px;color:var(--ink2)}
+.src a{font-size:11.5px;color:var(--signal)}
+.lib{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0}
+.src-card{display:flex;flex-direction:column;gap:4px;text-align:left;border:0;border-right:1px dashed var(--line);border-bottom:1px dashed var(--line);background:transparent;padding:14px 16px;color:var(--ink);font-size:13px;min-width:0}
+.src-card:hover{background:var(--marker)}
+.src-card .full{font-size:11.5px;color:var(--ink2);line-height:1.4}
+.src-card .uses{font-family:var(--mono);font-size:10.5px;color:var(--signal);margin-top:auto}
+.src-card{position:relative;cursor:pointer}
+.src-card.mine{background:var(--signal-soft)}
+.src-card .mine-tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;background:var(--signal);color:var(--paper);padding:1px 5px;margin-left:6px}
+.src-card .acts{position:absolute;top:8px;right:10px;display:flex;gap:8px}
+.src-card .acts button{border:0;background:none;font-family:var(--mono);font-size:10.5px;color:var(--ink2);text-decoration:underline;padding:0}
+.src-card .acts button:hover{color:var(--signal)}
+.src-card .acts button.pdf{color:var(--moss);font-weight:700}
+.src-card .lvl{padding-right:110px}
+.dropz{margin:14px 16px 0;border:1.5px dashed var(--ink);padding:14px 16px;display:flex;flex-direction:column;gap:3px;font-size:13px;transition:background .15s,transform .15s}
+.dropz span{font-size:12px;color:var(--ink2)}
+.dropz.over,#libPanel.over .dropz{background:var(--marker);transform:scale(1.005)}
+.af-status{margin:10px 16px 0;padding:9px 12px;font-size:12.5px;background:var(--paper);border-left:4px solid var(--moss);white-space:pre-line}
+.af-status.err{border-left-color:var(--signal)}
+.af-status[hidden]{display:none}
+.af-prev{border:1px dashed var(--line);padding:6px 9px;font-size:12px}
+.af-prev[hidden]{display:none}
+.af-prev summary{cursor:pointer;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--moss)}
+.af-abs{max-height:220px;overflow:auto;white-space:pre-wrap;color:var(--ink2);margin-top:6px;line-height:1.45}
+.af-links .chip.sug{border-style:dashed;border-color:var(--signal)}
+.af-links .chip.sug::before{content:"★ ";color:var(--signal)}
+.af-links .chip.sug.on::before{color:var(--paper)}
+.lib{margin-top:14px;border-top:1px solid var(--ink)}
+.addsrc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-bottom:1px solid var(--ink);background:var(--paper)}
+.addsrc[hidden]{display:none}
+.af-col{padding:16px 18px;border-right:1px dashed var(--line);display:flex;flex-direction:column;gap:9px;min-width:0}
+.af-col:nth-child(3){border-right:0}
+.af-col h4{margin:0;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2)}
+.af-opt{color:var(--line);margin-left:4px}
+.addsrc label{display:flex;flex-direction:column;gap:3px;font-size:11.5px;font-weight:600;color:var(--ink2);min-width:0}
+.addsrc input:not([type=checkbox]),.addsrc textarea{font-family:inherit;font-size:13px;border:1px solid var(--ink);background:var(--card);padding:7px;width:100%;color:var(--ink);resize:vertical;font-weight:400}
+.addsrc input:focus,.addsrc textarea:focus,.addsrc select:focus{outline:2px solid var(--signal);outline-offset:-1px}
+.af-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+.af-toggle{flex-direction:row!important;align-items:center;gap:7px!important;color:var(--ink)!important}
+.af-toggle input{accent-color:var(--signal)}
+#afPauta{display:flex;flex-direction:column;gap:9px}
+#afPauta[hidden]{display:none}
+.af-hint{font-size:11.5px;color:var(--ink2)}
+.af-links{display:flex;flex-wrap:wrap;gap:5px;max-height:330px;overflow:auto}
+.af-links .chip{font-size:11.5px}
+.af-foot{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 18px;border-top:1px dashed var(--line)}
+.af-foot .btn{width:auto}
+@media (max-width:980px){.addsrc{grid-template-columns:minmax(0,1fr)}.af-col{border-right:0;border-bottom:1px dashed var(--line)}}
+.btn{border:1px solid var(--ink);background:var(--ink);color:var(--paper);padding:9px 12px;font-size:13px;font-weight:600;width:100%}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.sig{background:var(--signal);border-color:var(--signal)}
+.row{display:flex;gap:6px}
+select{font-family:inherit;font-size:13px;border:1px solid var(--ink);background:var(--card);padding:7px;width:100%;color:var(--ink)}
+.check{list-style:none;padding:0;margin:0;font-size:12.5px}
+.check li{display:flex;gap:7px;margin-bottom:5px;align-items:flex-start}
+.check input{margin-top:3px;accent-color:var(--signal)}
+.toast{position:fixed;left:50%;bottom:58px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--paper);padding:9px 16px;font-size:13px;opacity:0;transition:.25s;pointer-events:none;z-index:9}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* calendar */
+.cal{margin-top:26px}
+.weeks{display:flex;gap:6px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));}
+.day{border-right:1px dashed var(--line);min-height:170px;padding:10px;min-width:0}
+.day:last-child{border-right:0}
+.day .dn{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);margin-bottom:8px}
+.post{background:var(--paper);border:1px solid var(--ink);padding:8px;margin-bottom:7px;font-size:12px;cursor:pointer;position:relative;transition:transform .12s}
+.post:hover{transform:translate(-2px,-2px);box-shadow:2px 2px 0 var(--ink)}
+.post .f{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--signal)}
+.post .x{position:absolute;top:2px;right:5px;border:0;background:none;font-size:14px;color:var(--ink2)}
+.empty{font-size:11.5px;color:var(--line);font-style:italic}
+.calbar{display:flex;gap:8px;flex-wrap:wrap}
+.calbar .btn{width:auto}
+.note{font-size:12px;color:var(--ink2);padding:10px 16px;border-top:1px dashed var(--line)}
+
+@media (max-width:980px){
+  .grid{grid-template-columns:minmax(0,1fr)}
+  .bank{max-height:300px}
+  .out{grid-template-columns:minmax(0,1fr)}
+  .sheet{border-right:0;border-bottom:1px solid var(--ink)}
+  .controls{grid-template-columns:minmax(0,1fr)}
+  .ctl{border-right:0;border-bottom:1px dashed var(--line)}
+  .cal-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mast{grid-template-columns:minmax(0,1fr)}
+}
+@media print{
+  body{background-image:none;padding:0}
+  .dropz,.addsrc,.af-status,.src-card .acts,.filters,.bank,.controls,.side .btn,.side select,.row,.calbar,.weeks,.mini,.flow,.post .x{display:none!important}
+  .grid{grid-template-columns:minmax(0,1fr)}
+  .grid>.panel:first-child{display:none}
+  .panel{box-shadow:none}
+  .out{grid-template-columns:minmax(0,1fr)}
+  .cal-grid{grid-template-columns:repeat(7,minmax(0,1fr))}
+  .slide{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  @page{size:A4 landscape;margin:12mm}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <div>
+      <div class="kicker">Notebook · A Ciência da Hipertrofia · <span id="kick">19 fontes analisadas · 32 pautas</span></div>
+      <h1>Estúdio de Pautas: <em>da evidência ao post</em></h1>
+      <p>Escolha uma pauta do banco, defina público, tom e formato, e saia com o roteiro pronto, com o dado de impacto e a referência completa de cada estudo. Depois, encaixe no calendário e exporte o mês.</p>
+    </div>
+    <div class="flow"><span><b>1</b> Pauta</span><span><b>2</b> Formato</span><span><b>3</b> Calendário</span></div>
+  </header>
+
+  <div class="grid">
+    <!-- BANK -->
+    <section class="panel">
+      <div class="ph"><h2>Banco de evidências</h2><span class="n" id="count"></span></div>
+      <div class="filters" id="filters"></div>
+      <div class="bank" id="bank"></div>
+    </section>
+
+    <!-- STUDIO -->
+    <section class="panel studio">
+      <div class="controls">
+        <div class="ctl"><label>Público</label><div class="seg" id="aud"></div></div>
+        <div class="ctl"><label>Tom</label><div class="seg" id="tone"></div></div>
+        <div class="ctl"><label>Atalho</label><div class="row"><button class="btn ghost" id="rand">🎲 Pauta aleatória</button></div></div>
+        <div class="ctl formats"><label>Formato</label><div class="seg" id="fmt"></div></div>
+      </div>
+      <div class="out">
+        <div class="sheet" id="sheet"></div>
+        <aside class="side">
+          <div>
+            <h4>Fontes do notebook</h4>
+            <ul class="src" id="srcs"></ul>
+          </div>
+          <div class="row" style="flex-direction:column">
+            <button class="btn sig" id="copyAll">Copiar conteúdo completo</button>
+          </div>
+          <div>
+            <h4>Agendar</h4>
+            <div class="row">
+              <select id="selWeek"></select>
+              <select id="selDay"></select>
+            </div>
+            <div style="height:6px"></div>
+            <button class="btn" id="addCal">+ Adicionar ao calendário</button>
+          </div>
+          <div>
+            <h4>Antes de publicar</h4>
+            <ul class="check" id="check"></ul>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </div>
+
+  <!-- CALENDAR -->
+  <section class="panel cal">
+    <div class="ph">
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+        <h2>Calendário editorial</h2>
+        <div class="weeks seg" id="weeks"></div>
+      </div>
+      <div class="calbar">
+        <button class="btn ghost" id="auto">Gerar mês automático</button>
+        <button class="btn ghost" id="exportMd">Exportar mês (.md)</button>
+        <button class="btn ghost" id="clear">Limpar</button>
+      </div>
+    </div>
+    <div class="cal-grid" id="cal"></div>
+    <div class="note">Clique num post para reabrir no estúdio. O plano fica salvo neste navegador.</div>
+  </section>
+
+  <!-- LIBRARY -->
+  <section class="panel cal" id="libPanel">
+    <div class="ph">
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><h2>Biblioteca de evidências</h2><span class="n" id="libCount"></span></div>
+      <div class="calbar">
+        <label class="btn sig" style="cursor:pointer">⤓ Importar PDF<input type="file" id="pdfIn" accept="application/pdf,.pdf" multiple hidden></label>
+        <button class="btn ghost" id="openAdd">+ Adicionar manualmente</button>
+        <button class="btn ghost" id="expSrc">Exportar minhas fontes</button>
+        <label class="btn ghost" style="cursor:pointer">Importar .json<input type="file" id="impSrc" accept=".json,application/json" hidden></label>
+      </div>
+    </div>
+    <div class="dropz" id="dropz"><b>Arraste PDFs de artigos para cá</b><span>Um PDF abre o formulário já preenchido para você revisar. Vários PDFs entram direto na biblioteca, e você ajusta cada um em “editar”.</span></div>
+    <div class="af-status" id="afStatus" hidden></div>
+    <form class="addsrc" id="addForm" hidden autocomplete="off">
+      <div class="af-col">
+        <h4 id="afTitle">1 · A fonte</h4>
+        <details class="af-prev" id="afPrev" hidden><summary>Texto extraído do PDF <span id="afPages"></span></summary><div class="af-abs" id="afAbs"></div></details>
+        <label>Autor e ano *<input name="short" required maxlength="80" placeholder="Ex.: Schoenfeld et al. (2017)"></label>
+        <label>Referência completa *<textarea name="full" required rows="3" maxlength="500" placeholder="Autores. Título. Revista, ano; volume:páginas."></textarea></label>
+        <div class="af-row">
+          <label>Tipo de evidência<select name="type"><option>Meta-análise</option><option>Umbrella review</option><option>Meta-análise em rede</option><option>Revisão sistemática</option><option>Revisão narrativa</option><option>Ensaio clínico</option><option>Estudo original</option><option>Especialista</option><option>Outro</option></select></label>
+          <label>Amostra / n<input name="n" maxlength="60" placeholder="Ex.: 15 estudos, n = 480"></label>
+        </div>
+        <label>Link (PDF, DOI, vídeo)<input name="url" type="url" maxlength="400" placeholder="https://"></label>
+        <label>Achado principal (dado de impacto)<textarea name="stat" rows="2" maxlength="300" placeholder="Ex.: 10+ séries semanais geraram ~ o dobro de ganho que &lt;5 séries."></textarea></label>
+      </div>
+      <div class="af-col">
+        <h4>2 · Vincular a pautas existentes</h4>
+        <div class="af-hint">Toque nas pautas que esta fonte reforça. Ela passa a aparecer nas referências do roteiro.</div>
+        <div class="af-links" id="afLinks"></div>
+      </div>
+      <div class="af-col">
+        <h4>3 · Criar pauta nova <span class="af-opt">opcional</span></h4>
+        <label class="af-toggle"><input type="checkbox" name="mk" id="afMk"> Gerar uma pauta a partir desta fonte</label>
+        <div id="afPauta" hidden>
+          <div class="af-row">
+            <label>Tipo<select name="ptype"><option value="mito">Mito</option><option value="erro">Erro</option><option value="conceito">Conceito</option></select></label>
+            <label>Categoria<select name="pcat" id="afCat"></select></label>
+          </div>
+          <label>Título *<input name="ptitle" maxlength="80" placeholder="Ex.: Volume semanal"></label>
+          <label>Crença comum *<input name="pbelief" maxlength="200" placeholder="O que as pessoas costumam achar"></label>
+          <label>O que a evidência mostra *<textarea name="ptruth" rows="2" maxlength="400"></textarea></label>
+          <label>Versão para leigos<textarea name="pplain" rows="2" maxlength="300" placeholder="Se vazio, usa o texto acima"></textarea></label>
+          <label>3 pontos de apoio (um por linha)<textarea name="ppoints" rows="3" maxlength="600"></textarea></label>
+          <label>Na prática<input name="papply" maxlength="250"></label>
+          <label>Hashtags<input name="ptags" maxlength="120" placeholder="#hipertrofia #volume"></label>
+        </div>
+      </div>
+      <div class="af-foot">
+        <span class="af-hint">Fica salvo neste navegador. Use “Exportar minhas fontes” para levar para outro computador.</span>
+        <div class="calbar"><button type="button" class="btn ghost" id="cancelAdd">Cancelar</button><button type="submit" class="btn" id="afSubmit">Salvar na biblioteca</button></div>
+      </div>
+    </form>
+    <div class="lib" id="lib"></div>
+    <div class="note">Números extraídos dos resumos e resultados das fontes do notebook. Clique numa fonte para filtrar as pautas que a usam. Fontes marcadas como <b>sua fonte</b> foram adicionadas por você e podem ser editadas ou removidas. Os PDFs importados ficam guardados neste navegador; o arquivo .json exportado leva os dados das fontes, mas não os PDFs.</div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script src="pdf.js"></script>
+<script>
+
+const AUD={leigo:"Leigo",praticante:"Praticante",profissional:"Profissional"};
+const TONE={direto:"Direto",acolhedor:"Acolhedor",provocativo:"Provocativo"};
+const FMT={reels:"Roteiro Reels/TikTok",carrossel:"Carrossel 8 slides",legenda:"Legenda Instagram",linkedin:"Post LinkedIn/Thread",story:"Stories com enquete",aula:"Roteiro de aula/podcast"};
+const DAYS=["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"];
+const S={item:"m1",aud:"leigo",tone:"direto",fmt:"reels",filter:"Todos",week:0,plan:JSON.parse(localStorage.getItem("pautasPlan")||"[]")};
+const $=id=>document.getElementById(id);
+const byId=id=>ITEMS.find(i=>i.id===id);
+
+/* fontes do usuário: {sources:{key:src}, links:{key:[itemIds]}, items:[pautas]} */
+const BASE_KEYS=new Set(Object.keys(SOURCES));
+let MINE=loadMine();
+function loadMine(){try{const m=JSON.parse(localStorage.getItem("pautasSources")||"{}");return {sources:m.sources||{},links:m.links||{},items:m.items||[]}}catch(e){return {sources:{},links:{},items:[]}}}
+function saveMine(){localStorage.setItem("pautasSources",JSON.stringify(MINE))}
+function applyMine(){
+  Object.entries(MINE.sources).forEach(([k,s])=>{if(!BASE_KEYS.has(k))SOURCES[k]={...s,mine:true}});
+  Object.entries(MINE.links).forEach(([k,ids])=>{if(!SOURCES[k])return;ids.forEach(id=>{const it=byId(id);if(it&&!it.sources.includes(k))it.sources.push(k)})});
+  MINE.items.forEach(it=>{if(!byId(it.id)&&it.sources.every(k=>SOURCES[k]))ITEMS.push({...it,mine:true})});
+}
+applyMine();
+S.plan=S.plan.filter(p=>byId(p.item));
+
+function hook(it,tone){
+  const lead={mito:"Mito",erro:"Erro comum",conceito:"Entenda"}[it.type];
+  if(tone==="provocativo") return it.type==="mito"?`“${it.belief}” Isso é mito, e está atrasando seu resultado.`:`“${it.belief}” É exatamente isso que trava sua evolução.`;
+  if(tone==="acolhedor") return `Já pensou “${it.belief.replace(/\.$/,"")}”? Normal, quase todo mundo já pensou. Mas a evidência mostra outra coisa.`;
+  return `${lead}: “${it.belief}” Veja o que a ciência diz.`;
+}
+function cta(tone){return {direto:"Salve este post e aplique no próximo treino.",acolhedor:"Manda para alguém que precisa ouvir isso hoje 💛",provocativo:"Discorda? Comenta aqui, com fonte."}[tone]}
+function core(it,aud){return aud==="leigo"?it.plain:it.truth}
+function srcLine(it){return it.sources.map(k=>SOURCES[k].short).join("; ")}
+function shortTitle(it){return it.type==="mito"?`MITO: ${it.title.toUpperCase()}`:it.type==="erro"?`ERRO: ${it.title.toUpperCase()}`:it.title.toUpperCase()}
+
+function build(it,aud,tone,fmt){
+  const h=hook(it,tone), c=core(it,aud), p=it.points, src=srcLine(it), ct=cta(tone);
+  const pro=aud==="profissional";
+  const tags=`${it.tags} #ciencianotreino #musculacao #treinodeforca`;
+  if(fmt==="reels") return {blocks:[
+    ["Gancho · 0–3 s",h,"hook"],
+    ["Texto na tela",`${shortTitle(it)}\n${it.stat}`],
+    ["Desenvolvimento · 3–25 s",p.map((x,i)=>`${i+1}. ${x}`).join("\n")],
+    ["Prova · 25–35 s",(pro?"O que as revisões mostram: ":"O que a pesquisa mostra: ")+c+`\n\n📊 ${it.stat}`+(pro?`\n\nFonte na tela: ${src}`:"")],
+    ["Na prática + CTA · 35–45 s",`${it.apply}\n\n${ct}`],
+    ["Legenda curta",`${h}\n\n${c}\n\nFontes: ${src}\n\n${tags}`]
+  ]};
+  if(fmt==="carrossel") return {slides:[
+    [h,"Capa"],[`“${it.belief}”`,it.type==="conceito"?"O que muita gente pensa":"O que dizem"],
+    [c,"O que a evidência mostra"],[it.stat,"Dado de impacto"],[p[0],"Ponto 1"],[`${p[1]}\n\n${p[2]}`,"Pontos 2 e 3"],
+    [it.apply,"Na prática"],[`${ct}\n\nFontes: ${src}`,"Fontes + CTA"]
+  ],blocks:[["Legenda do carrossel",`${h}\n\nArrasta para o lado 👉\n\nFontes: ${src}\n\n${tags}`]]};
+  if(fmt==="legenda") return {blocks:[
+    ["Primeira linha",h,"hook"],
+    ["Legenda completa",`${h}\n\n${c}\n\n📊 ${it.stat}\n\n${p.map(x=>"✔ "+x).join("\n")}\n\n👉 Na prática: ${it.apply}\n\n📚 Fontes: ${src}\n\n${ct}\n\n${tags}`]
+  ]};
+  if(fmt==="linkedin") return {blocks:[
+    ["Abertura",h,"hook"],
+    ["Post",`${h}\n\n${pro?it.truth:c}\n\nDado-chave: ${it.stat}.\n\nTrês pontos que ajudam a entender:\n${p.map((x,i)=>`${i+1}/ ${x}`).join("\n")}\n\nAplicação${pro?" na prescrição":""}: ${it.apply}\n\nReferências: ${src}\n\n${ct}`]
+  ]};
+  if(fmt==="story") return {blocks:[
+    ["Story 1 · Enquete",it.type==="erro"?`VOCÊ JÁ PENSOU ASSIM?\n“${it.belief}”\n\n[Enquete] Já | Nunca`:`MITO OU VERDADE?\n“${it.belief}”\n\n[Enquete] Verdade | Mito`,"hook"],
+    ["Story 2 · Resposta",`${{mito:"É MITO.",erro:"É UM ERRO COMUM.",conceito:"Não é bem assim."}[it.type]}\n${aud==="leigo"?it.plain:it.truth}\n\n📊 ${it.stat}`],
+    ["Story 3 · Por quê",p.join("\n")],
+    ["Story 4 · Faça hoje",it.apply],
+    ["Story 5 · Caixa de perguntas",`Ficou com dúvida sobre ${it.title.toLowerCase()}? Manda aqui 👇\n\nFonte: ${SOURCES[it.sources[0]].short}`]
+  ]};
+  return {blocks:[
+    ["Abertura · 1 min",`${h}\nApresente a crença: “${it.belief}”`,"hook"],
+    ["Bloco 1 · O que a evidência diz",it.truth+(aud==="leigo"?`\n\nTradução simples: ${it.plain}`:"")],
+    ["Dado para citar",it.stat],["Bloco 2 · Por que isso acontece",p.map((x,i)=>`${i+1}. ${x}`).join("\n")],
+    ["Bloco 3 · Aplicação",it.apply],
+    ["Pergunta para a audiência",aud==="profissional"?"Como você ajusta essa variável na prescrição dos seus alunos?":"Você já acreditou nisso? O que muda no seu próximo treino?"],
+    ["Referências citadas",it.sources.map(k=>SOURCES[k].full).join("\n")]
+  ]};
+}
+function toText(it,out){
+  let t=`${it.title} · ${FMT[S.fmt]||""}\n\n`;
+  if(out.slides) t+=out.slides.map((s,i)=>`[Slide ${i+1} · ${s[1]}]\n${s[0]}`).join("\n\n")+"\n\n";
+  t+=out.blocks.map(b=>`[${b[0]}]\n${b[1]}`).join("\n\n");
+  return t;
+}
+const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+const safeUrl=u=>/^https?:\/\//i.test(u||"")?u:"";
+
+function renderFilters(){
+  const cats=["Todos","Mitos","Erros","Conceitos",...new Set(ITEMS.map(i=>i.cat))];
+  $("filters").innerHTML=cats.map(c=>`<button class="chip ${S.filter===c?"on":""}" data-c="${esc(c)}">${esc(c)}</button>`).join("");
+  $("filters").onclick=e=>{const c=e.target.dataset.c;if(c){S.filter=c;renderFilters();renderBank()}};
+}
+function visible(){
+  const f=S.filter;
+  if(f.startsWith("src:")) return ITEMS.filter(i=>i.sources.includes(f.slice(4)));
+  return ITEMS.filter(i=>f==="Todos"||(f==="Mitos"&&i.type==="mito")||(f==="Erros"&&i.type==="erro")||(f==="Conceitos"&&i.type==="conceito")||i.cat===f);
+}
+function renderBank(){
+  const v=visible(); $("count").textContent=S.filter.startsWith("src:")?`${v.length} pautas · ${SOURCES[S.filter.slice(4)].short}`:`${v.length} pautas`;
+  $("bank").innerHTML=v.map(i=>`<button class="item ${S.item===i.id?"on":""}" data-id="${i.id}"><span class="t"><span class="tag ${i.type}">${i.type}</span>${esc(i.title)}</span><span class="b">${esc(i.belief)}</span></button>`).join("");
+}
+$("bank").onclick=e=>{const b=e.target.closest(".item");if(b){S.item=b.dataset.id;renderBank();renderOut()}};
+
+function seg(id,map,key){
+  $(id).innerHTML=Object.entries(map).map(([k,v])=>`<button data-k="${k}" class="${S[key]===k?"on":""}">${v}</button>`).join("");
+  $(id).onclick=e=>{const k=e.target.dataset.k;if(k){S[key]=k;seg(id,map,key);renderOut()}};
+}
+let current="";
+function renderOut(){
+  const it=byId(S.item), out=build(it,S.aud,S.tone,S.fmt);
+  current=toText(it,out);
+  let html=`<h3>${esc(it.title)}</h3><div class="sub">${esc(it.cat)} · ${FMT[S.fmt]} · ${AUD[S.aud]} · ${TONE[S.tone]}</div>`;
+  if(out.slides) html+=`<div class="slides">${out.slides.map((s,i)=>`<div class="slide"><div class="num">${String(i+1).padStart(2,"0")} / ${s[1]}</div><div class="${i===0?"big":""}">${esc(s[0]).replace(/\n/g,"<br>")}</div></div>`).join("")}</div>`;
+  html+=out.blocks.map((b,i)=>`<div class="block ${b[2]||""}"><div class="lbl"><span>${b[0]}</span><button class="mini" data-i="${i}">copiar</button></div><div class="txt">${esc(b[1])}</div></div>`).join("");
+  $("sheet").innerHTML=html;
+  $("sheet").querySelectorAll(".mini").forEach(btn=>btn.onclick=()=>copy(out.blocks[+btn.dataset.i][1]));
+  $("srcs").innerHTML=it.sources.map(k=>{const s=SOURCES[k],u=safeUrl(s.url);return `<li><b>${esc(s.short)}</b> <span class="lvl">${esc(s.type)}${s.n?" · "+esc(s.n):""}</span><br><span class="full">${esc(s.full)}</span>${u?` <a href="${esc(u)}" target="_blank" rel="noopener">${/youtu/.test(u)?"assistir":"abrir"}</a>`:""}${s.pdf?` <a href="#" data-pdf="${k}">PDF</a>`:""}</li>`}).join("");
+  const checks=["Fonte citada na legenda ou no slide final","Sem promessa de resultado garantido","Termos técnicos explicados para o público escolhido",it.type==="mito"?"Mito apresentado como crença, não como acusação":"Aplicação prática clara no fim","Números conferidos no PDF original"];
+  $("check").innerHTML=checks.map(c=>`<li><input type="checkbox"><span>${c}</span></li>`).join("");
+}
+function copy(t){navigator.clipboard?.writeText(t).then(()=>toast("Copiado ✓"),()=>toast("Não foi possível copiar"))}
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1500)}
+$("copyAll").onclick=()=>copy(current);
+$("rand").onclick=()=>{const v=visible();S.item=v[Math.floor(Math.random()*v.length)].id;S.fmt=Object.keys(FMT)[Math.floor(Math.random()*6)];seg("fmt",FMT,"fmt");renderBank();renderOut()};
+
+/* calendar */
+$("selWeek").innerHTML=[0,1,2,3].map(w=>`<option value="${w}">Semana ${w+1}</option>`).join("");
+$("selDay").innerHTML=DAYS.map((d,i)=>`<option value="${i}">${d}</option>`).join("");
+function save(){localStorage.setItem("pautasPlan",JSON.stringify(S.plan))}
+function renderWeeks(){
+  $("weeks").innerHTML=[0,1,2,3].map(w=>`<button data-w="${w}" class="${S.week===w?"on":""}">Sem ${w+1} (${S.plan.filter(p=>p.w===w).length})</button>`).join("");
+}
+$("weeks").onclick=e=>{const w=e.target.dataset.w;if(w!==undefined){S.week=+w;renderCal()}};
+function renderCal(){
+  renderWeeks();
+  $("cal").innerHTML=DAYS.map((d,di)=>{
+    const posts=S.plan.map((p,idx)=>({...p,idx})).filter(p=>p.w===S.week&&p.d===di);
+    return `<div class="day"><div class="dn">${d}</div>${posts.length?posts.map(p=>`<div class="post" data-idx="${p.idx}"><button class="x" data-del="${p.idx}">×</button><div class="f">${FMT[p.fmt]}</div>${esc(byId(p.item).title)}<div style="color:var(--ink2);font-size:11px">${AUD[p.aud]} · ${TONE[p.tone]}</div></div>`).join(""):`<div class="empty">livre</div>`}</div>`;
+  }).join("");
+}
+$("cal").onclick=e=>{
+  if(e.target.dataset.del!==undefined){S.plan.splice(+e.target.dataset.del,1);save();renderCal();return}
+  const p=e.target.closest(".post");if(!p)return;
+  const x=S.plan[+p.dataset.idx];Object.assign(S,{item:x.item,fmt:x.fmt,aud:x.aud,tone:x.tone});
+  seg("aud",AUD,"aud");seg("tone",TONE,"tone");seg("fmt",FMT,"fmt");renderBank();renderOut();
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+$("addCal").onclick=()=>{
+  const w=+$("selWeek").value,d=+$("selDay").value;
+  S.plan.push({w,d,item:S.item,fmt:S.fmt,aud:S.aud,tone:S.tone});save();S.week=w;renderCal();toast(`Agendado: Semana ${w+1}, ${DAYS[d]}`);
+};
+$("auto").onclick=()=>{
+  const order=["m3","e3","m11","c5","m1","e2","m12","c3","m2","e4","m9","c6"];
+  const fm=["reels","carrossel","story"], tones=["direto","acolhedor","provocativo"];
+  S.plan=[];let k=0;
+  for(let w=0;w<4;w++)for(const d of [0,2,4]){S.plan.push({w,d,item:order[k],fmt:fm[k%3],aud:S.aud,tone:tones[(k+w)%3]});k++}
+  save();S.week=0;renderCal();toast("Mês gerado: 12 posts (Seg, Qua, Sex)");
+};
+$("clear").onclick=()=>{if(confirm("Limpar todo o calendário?")){S.plan=[];save();renderCal()}};
+$("exportMd").onclick=()=>{
+  if(!S.plan.length){toast("Calendário vazio");return}
+  const sorted=[...S.plan].sort((a,b)=>a.w-b.w||a.d-b.d);
+  let md="# Plano de conteúdo · Hipertrofia com evidência\n\n";
+  sorted.forEach(p=>{const it=byId(p.item),o=build(it,p.aud,p.tone,p.fmt);
+    md+=`## Semana ${p.w+1} · ${DAYS[p.d]} · ${FMT[p.fmt]}\n**${it.title}** (${AUD[p.aud]}, ${TONE[p.tone]})\n\n`;
+    if(o.slides) md+=o.slides.map((s,i)=>`**Slide ${i+1} · ${s[1]}:** ${s[0].replace(/\n/g," ")}`).join("\n\n")+"\n\n";
+    md+=o.blocks.map(b=>`**${b[0]}**\n\n${b[1]}`).join("\n\n")+"\n\n---\n\n";});
+  try{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([md],{type:"text/markdown"}));a.download="plano-de-conteudo-hipertrofia.md";a.click();toast("Exportado ✓")}
+  catch(err){copy(md)}
+  copy(md);
+};
+
+function renderLib(){
+  const keys=Object.keys(SOURCES), nm=keys.filter(k=>SOURCES[k].mine).length;
+  $("libCount").textContent=`${keys.length} fontes${nm?` · ${nm} sua${nm===1?"":"s"}`:""}`;
+  $("kick").textContent=`${keys.length} fontes analisadas · ${ITEMS.length} pautas`;
+  $("lib").innerHTML=keys.map(k=>{const s=SOURCES[k],n=ITEMS.filter(i=>i.sources.includes(k)).length;
+    const acts=(s.pdf?`<button class="pdf" data-pdf="${k}">PDF</button>`:"")+(s.mine?`<button data-ed="${k}">editar</button><button data-rm="${k}">remover</button>`:"");
+    return `<div class="src-card ${s.mine?"mine":""}" data-k="${k}" role="button" tabindex="0">${acts?`<span class="acts">${acts}</span>`:""}<span class="lvl">${esc(s.type)}${s.n?" · "+esc(s.n):""}${s.mine?`<span class="mine-tag">sua fonte</span>`:""}</span><b>${esc(s.short)}</b><span class="full">${esc(s.full)}</span>${s.stat?`<span class="full">📊 ${esc(s.stat)}</span>`:""}<span class="uses">${n?`${n} pauta${n===1?"":"s"} →`:(s.sug&&s.sug.length?"sem pauta vinculada · clique em editar":"ainda sem pauta vinculada")}</span></div>`}).join("");
+}
+function openSource(k){S.filter="src:"+k;renderFilters();const v=visible();if(v.length){S.item=v[0].id;renderOut()}renderBank();window.scrollTo({top:0,behavior:"smooth"})}
+$("lib").onclick=e=>{
+  const d=e.target.dataset;
+  if(d.rm){removeSource(d.rm);return}
+  if(d.ed){editSource(d.ed);return}
+  if(d.pdf){openPdf(d.pdf);return}
+  const b=e.target.closest(".src-card");if(!b)return;
+  if(!ITEMS.some(i=>i.sources.includes(b.dataset.k))){toast(SOURCES[b.dataset.k].mine?"Clique em editar para vincular a uma pauta":"Esta fonte ainda não tem pauta");return}
+  openSource(b.dataset.k);
+};
+$("lib").onkeydown=e=>{if(e.key==="Enter"&&e.target.classList.contains("src-card"))e.target.click()};
+$("srcs").onclick=e=>{const k=e.target.dataset.pdf;if(k){e.preventDefault();openPdf(k)}};
+
+/* PDFs guardados no navegador (IndexedDB), pois não cabem no localStorage */
+const DB={
+  open(){return new Promise((res,rej)=>{const r=indexedDB.open("pautasPDF",1);r.onupgradeneeded=()=>r.result.createObjectStore("pdf");r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})},
+  async tx(mode,fn){const db=await this.open();return new Promise((res,rej)=>{const t=db.transaction("pdf",mode),q=fn(t.objectStore("pdf"));t.oncomplete=()=>res(q&&q.result);t.onerror=()=>rej(t.error)})},
+  put(k,b){return this.tx("readwrite",s=>s.put(b,k))},get(k){return this.tx("readonly",s=>s.get(k))},del(k){return this.tx("readwrite",s=>s.delete(k))}
+};
+async function openPdf(k){
+  let b=null;try{b=await DB.get(k)}catch(e){}
+  if(!b){toast("PDF não encontrado neste navegador");return}
+  const u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.target="_blank";a.rel="noopener";a.click();setTimeout(()=>URL.revokeObjectURL(u),120000);
+}
+
+/* adicionar / editar fonte */
+const F=$("addForm");let picked=new Set(),sugSet=new Set(),pending=null;
+function renderLinks(){
+  const list=[...ITEMS].sort((a,b)=>sugSet.has(b.id)-sugSet.has(a.id));
+  $("afLinks").innerHTML=list.map(i=>`<button type="button" class="chip ${picked.has(i.id)?"on":""} ${sugSet.has(i.id)?"sug":""}" data-id="${i.id}">${esc(i.title)}</button>`).join("");
+}
+$("afLinks").onclick=e=>{const id=e.target.dataset.id;if(!id)return;picked.has(id)?picked.delete(id):picked.add(id);renderLinks()};
+$("afCat").innerHTML=[...new Set(ITEMS.map(i=>i.cat))].map(c=>`<option>${esc(c)}</option>`).join("");
+$("afMk").onchange=()=>{$("afPauta").hidden=!$("afMk").checked;["ptitle","pbelief","ptruth"].forEach(n=>F.elements[n].required=$("afMk").checked)};
+function status(msg,err){const s=$("afStatus");s.hidden=!msg;s.textContent=msg||"";s.classList.toggle("err",!!err)}
+function resetForm(){
+  F.reset();$("afMk").onchange();F.hidden=true;delete F.dataset.edit;pending=null;picked=new Set();sugSet=new Set();
+  $("afSubmit").textContent="Salvar na biblioteca";$("afTitle").textContent="1 · A fonte";$("afPrev").hidden=true;
+}
+function showForm(){F.hidden=false;renderLinks();F.scrollIntoView({behavior:"smooth",block:"start"});setTimeout(()=>F.elements.short.focus({preventScroll:true}),300)}
+function fill(m){
+  const set=(n,v)=>{if(v!==undefined)F.elements[n].value=v||""};
+  set("short",m.short);set("full",m.full);set("n",m.n);set("url",m.url);set("stat",m.stat);
+  if([...F.elements.type.options].some(o=>o.value===m.type))F.elements.type.value=m.type;
+}
+$("openAdd").onclick=()=>{const was=!F.hidden&&!F.dataset.edit&&!pending;resetForm();status("");if(!was)showForm()};
+$("cancelAdd").onclick=()=>{resetForm();status("")};
+function editSource(k){
+  const s=MINE.sources[k];if(!s)return;resetForm();status("");
+  F.dataset.edit=k;fill(s);picked=new Set(MINE.links[k]||[]);sugSet=new Set((s.sug||[]).filter(byId));
+  $("afSubmit").textContent="Atualizar fonte";$("afTitle").textContent="1 · Editando fonte";
+  if(s.abs){$("afAbs").textContent=s.abs;$("afPages").textContent="";$("afPrev").hidden=false}
+  showForm();
+}
+function slug(s){return "u_"+s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"").slice(0,24)+"_"+Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
+
+/* sugestão de pautas: temas encontrados no texto → pautas que tratam do mesmo tema */
+const THEMES=[
+  [/\bfailure\b|\bfalha\b|proximity.to.failure|repetitions in reserve|\bRIR\b/gi,/falha/i],
+  [/rest interval|inter-set rest|rest period|intervalo de (descanso|recupera)/gi,/descans/i],
+  [/training frequency|\bfrequency\b|frequência/gi,/frequ|4x/i],
+  [/\bsplit\b|full.body|corpo inteiro/gi,/split|full body/i],
+  [/low.load|high.load|% ?1RM|\bload\b|carga/gi,/carga|pesad|repetiç/i],
+  [/training volume|sets per week|weekly sets|séries semanais|volume de treino/gi,/volume|série/i],
+  [/eccentric|excêntric|repetition duration|\btempo\b|cadência/gi,/excêntric|lento|cadên/i],
+  [/soreness|\bDOMS\b|dor muscular|muscle damage|dano muscular/gi,/\bdor\b|lático/i],
+  [/periodi[sz]/gi,/periodiz/i],
+  [/exercise order|ordem dos exercícios/gi,/multiarticular/i],
+  [/free.weight|machine|máquina/gi,/máquina|peso livre/i],
+  [/affective|pleasure|enjoyment|prazer|adherence|adesão/gi,/prazer|constân/i],
+  [/\bfatigue\b|fadiga|exhaustion|exaustão/gi,/cansaço|falha|descans/i],
+  [/motor unit|unidades? motoras?|recruitment|recrutamento|voluntary activation|ativação voluntária/gi,/carga|falha|pesad/i],
+  [/muscle volume|muscle size|cross.sectional area|volume muscular|calf|panturrilha|gastrocnemius/gi,/panturrilha|músculos menores/i],
+  [/novice|untrained|beginner|iniciante|destreinad/gi,/iniciante|aprenda/i]
+];
+function suggest(flat){
+  const scored=THEMES.map(([re,item])=>[(flat.match(re)||[]).length,item]).filter(x=>x[0]>=2).sort((a,b)=>b[0]-a[0]).slice(0,3);
+  const ids=new Set();scored.forEach(([,item])=>ITEMS.filter(i=>item.test(i.title+" "+i.belief)).forEach(i=>ids.add(i.id)));
+  return [...ids].slice(0,8);
+}
+
+async function readPdf(file){
+  const r=await PDFREAD.read(await file.arrayBuffer()),m=PDFREAD.meta(r,file.name);
+  m.sug=suggest(m.flat);m.blob=file;m.name=file.name;return m;
+}
+async function handlePdfs(files){
+  files=[...files].filter(f=>/pdf$/i.test(f.type)||/\.pdf$/i.test(f.name));
+  if(!files.length){toast("Escolha arquivos PDF");return}
+  if(typeof DecompressionStream==="undefined"){status("Este navegador não consegue descompactar PDFs. Use “Adicionar manualmente”.",true);return}
+  if(files.length===1){
+    resetForm();status(`Lendo “${files[0].name}”…`);
+    try{
+      const m=await readPdf(files[0]);pending=m;fill(m);sugSet=new Set(m.sug);
+      $("afAbs").textContent=m.abs||"(nenhum texto extraído)";$("afPages").textContent=`· ${m.pages} pág.`;$("afPrev").hidden=false;
+      const got=[m.title&&"título",m.short&&!m.warn.some(w=>/Autores/.test(w))&&"autores",m.doi&&"DOI",m.n&&"amostra",m.stat&&"achado"].filter(Boolean);
+      status(`“${files[0].name}” lido: ${got.length?got.join(", ")+" preenchidos":"poucos campos encontrados"}. ${m.sug.length?`★ ${m.sug.length} pautas sugeridas pelo conteúdo.`:""}\nConfira os campos e os números no PDF antes de salvar.${m.warn.length?"\n⚠ "+m.warn.join("\n⚠ "):""}`,m.warn.length>0);
+      showForm();
+    }catch(err){pending=null;status(`Não consegui ler “${files[0].name}”: ${err.message||err}. Você ainda pode adicionar manualmente.`,true)}
+    return;
+  }
+  resetForm();let ok=0,fail=[],first=null;
+  for(const [i,f] of files.entries()){
+    status(`Lendo PDF ${i+1} de ${files.length}: “${f.name}”…`);
+    try{
+      const m=await readPdf(f),k=slug(m.short);
+      const src={short:m.short,full:m.full,type:m.type,n:m.n,abs:m.abs,sug:m.sug,file:f.name};
+      if(m.url)src.url=m.url;if(m.stat)src.stat=m.stat;
+      try{await DB.put(k,f);src.pdf=true}catch(e){}
+      MINE.sources[k]=src;ok++;first=first||k;
+    }catch(err){fail.push(f.name)}
+  }
+  saveMine();applyMine();renderLib();renderFilters();renderBank();
+  status(`${ok} PDF${ok===1?"":"s"} adicionado${ok===1?"":"s"} à biblioteca, sem pautas vinculadas. Clique em “editar” em cada um para conferir os dados e vincular às pautas sugeridas (★).${fail.length?`\n⚠ Não foi possível ler: ${fail.join(", ")}`:""}`,fail.length>0);
+  $("lib").scrollIntoView({behavior:"smooth",block:"start"});
+}
+$("pdfIn").onchange=e=>{handlePdfs(e.target.files);e.target.value=""};
+const LP=$("libPanel");
+LP.addEventListener("dragover",e=>{if([...e.dataTransfer.types].includes("Files")){e.preventDefault();LP.classList.add("over")}});
+LP.addEventListener("dragleave",e=>{if(!LP.contains(e.relatedTarget))LP.classList.remove("over")});
+LP.addEventListener("drop",e=>{e.preventDefault();LP.classList.remove("over");handlePdfs(e.dataTransfer.files)});
+$("dropz").onclick=()=>$("pdfIn").click();
+$("dropz").style.cursor="pointer";
+
+F.onsubmit=async e=>{
+  e.preventDefault();const v=n=>(F.elements[n].value||"").trim();
+  const editK=F.dataset.edit,k=editK||slug(v("short"));
+  const src={...(MINE.sources[k]||{}),short:v("short"),full:v("full"),type:v("type"),n:v("n")};
+  if(safeUrl(v("url")))src.url=v("url");else delete src.url;
+  if(v("stat"))src.stat=v("stat");else delete src.stat;
+  if(pending){
+    src.abs=pending.abs;src.sug=pending.sug;src.file=pending.name;
+    try{await DB.put(k,pending.blob);src.pdf=true}catch(err){toast("Fonte salva, mas o PDF não pôde ser guardado neste navegador")}
+  }
+  MINE.sources[k]=src;
+  if(picked.size)MINE.links[k]=[...picked];else delete MINE.links[k];
+  if(editK){const own=new Set(MINE.items.filter(i=>i.sources.includes(k)).map(i=>i.id));
+    ITEMS.forEach(it=>{if(!own.has(it.id)&&!picked.has(it.id))it.sources=it.sources.filter(x=>x!==k)})}
+  if($("afMk").checked){
+    const pts=v("ppoints").split("\n").map(x=>x.trim()).filter(Boolean);
+    while(pts.length<3)pts.push(pts.length===0?v("ptruth"):`Fonte: ${src.short}`);
+    MINE.items.push({id:"p"+k+Date.now().toString(36),type:v("ptype"),cat:v("pcat"),title:v("ptitle"),belief:v("pbelief"),truth:v("ptruth"),plain:v("pplain")||v("ptruth"),
+      stat:src.stat||`Veja os números em ${src.short}`,points:pts.slice(0,3),apply:v("papply")||"Converse com um profissional antes de mudar seu treino.",
+      sources:[k],tags:v("ptags")||"#hipertrofia"});
+  }
+  saveMine();applyMine();resetForm();status("");
+  renderLib();renderFilters();renderBank();renderOut();
+  const n=ITEMS.filter(i=>i.sources.includes(k)).length;
+  toast(`${editK?"Fonte atualizada":"Fonte salva"}${n?` · ${n} pauta${n===1?"":"s"} vinculada${n===1?"":"s"}`:""}`);
+  if(n)openSource(k);
+};
+function removeSource(k){
+  if(!confirm(`Remover “${SOURCES[k].short}” da biblioteca? Pautas criadas a partir dela também saem.`))return;
+  const drop=new Set(MINE.items.filter(i=>i.sources.includes(k)).map(i=>i.id));
+  delete MINE.sources[k];delete MINE.links[k];DB.del(k).catch(()=>{});MINE.items=MINE.items.filter(i=>!drop.has(i.id));saveMine();
+  delete SOURCES[k];
+  for(let j=ITEMS.length-1;j>=0;j--){if(drop.has(ITEMS[j].id))ITEMS.splice(j,1);else ITEMS[j].sources=ITEMS[j].sources.filter(x=>x!==k)}
+  S.plan=S.plan.filter(p=>byId(p.item));save();
+  if(!byId(S.item))S.item=ITEMS[0].id;
+  if(S.filter==="src:"+k)S.filter="Todos";
+  renderLib();renderFilters();renderBank();renderOut();renderCal();toast("Fonte removida");
+}
+$("expSrc").onclick=()=>{
+  if(!Object.keys(MINE.sources).length){toast("Você ainda não adicionou fontes");return}
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(MINE,null,2)],{type:"application/json"}));a.download="minhas-fontes-hipertrofia.json";a.click();toast("Exportado ✓");
+};
+$("impSrc").onchange=e=>{
+  const f=e.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{const m=JSON.parse(r.result);if(!m.sources)throw 0;
+    Object.assign(MINE.sources,m.sources);Object.assign(MINE.links,m.links||{});
+    (m.items||[]).forEach(it=>{if(!MINE.items.some(x=>x.id===it.id))MINE.items.push(it)});
+    saveMine();applyMine();renderLib();renderFilters();renderBank();toast(`${Object.keys(m.sources).length} fonte(s) importada(s)`)}
+    catch(err){toast("Arquivo inválido")}e.target.value=""};
+  r.readAsText(f);
+};
+
+renderLib();renderFilters();renderBank();seg("aud",AUD,"aud");seg("tone",TONE,"tone");seg("fmt",FMT,"fmt");renderOut();renderCal();
+</script>
+</body>
+</html>
